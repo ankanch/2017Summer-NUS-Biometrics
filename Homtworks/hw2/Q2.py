@@ -27,7 +27,6 @@ img_lena =  ImageOps.equalize(img_lena)
 #img_lena.show()
 img_lena.save("./q2_histeuql_lena.png")
 # then draw historgram graph
-
 orginal = Image.open("./lena.png")
 processed = Image.open("./q2_histeuql_lena.png")
 orginal = orginal.convert("L")
@@ -48,6 +47,7 @@ a.set_title("Zhang - After Historgram Equalization")
 plt.bar(x, height=hisp,fc='k', ec='k')
 plt.xlabel("Pixel")
 plt.show()
+plt.save("./q2_histogram.png")
 
 # perform max,min,medium filter on lena.png
 maxIMF =  img_lena.filter(ImageFilter.MaxFilter)
