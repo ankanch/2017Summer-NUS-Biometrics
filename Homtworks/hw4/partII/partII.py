@@ -18,4 +18,7 @@ def detect_face(img_name):
 
 if __name__=='__main__':
 	#write your code here
+	faces = ["./test1.png","./test2.png","./test3.png","./test4.jpg"]
+	for face in faces:
+		detect_face(face)
 	
