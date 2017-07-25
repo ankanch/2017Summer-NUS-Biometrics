@@ -1,4 +1,5 @@
 import cv2
+import os
 
 def detect_face(img_name):
 	face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
@@ -18,7 +19,8 @@ def detect_face(img_name):
 
 if __name__=='__main__':
 	#write your code here
-	faces = ["./test1.png","./test2.png","./test3.png","./test4.jpg"]
+	faces = ["./"+x for x in os.listdir("./") if x[-3:] in ("png","jpg")]
+	#faces = ["./test1.png","./test2.png","./test3.png","./test4.jpg"]
 	for face in faces:
 		detect_face(face)
 	
