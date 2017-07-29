@@ -5,11 +5,12 @@ import cv2
 import operator
 
 def ComputeNorm(x):
-    # function r=ComputeNorm(x)
-    # computes vector norms of x
-    # x: d x m matrix, each column a vector
-    # r: 1 x m matrix, each the corresponding norm (L2)
-
+    """
+    ### function r=ComputeNorm(x)
+    ### computes vector norms of x
+    ### x: d x m matrix, each column a vector
+    ### r: 1 x m matrix, each the corresponding norm (L2)
+    """
     [row, col] = x.shape
     r = np.zeros((1,col))
 
