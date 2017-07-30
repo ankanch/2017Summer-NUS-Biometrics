@@ -6,7 +6,7 @@ faces_train,idLabel_train = FF.read_faces("./train")
 print(">>-1:ReadData: feaces.shape=",faces_train.shape,"\tidLabel.shape=",idLabel_train.shape)
 K = 30
 K1 = 90
-# =========================enroll faces==========
+# Task 1,3=========================enroll faces==========
 # project all training images into corresponding feature space
 W,LL,m = FF.myPCA(faces_train)
 We = W[:,:K]
@@ -36,7 +36,7 @@ print(">>3:LDA- Z.shape=",Z_lda.shape)
 # ======================identify========================
 faces_test,idLabel_test = FF.read_faces("./test")
 proj_pca_test = np.dot(We.T,(faces_test.T-m).T)     # column for one sample
-proj_lda_test = np.dot(np.dot(W_lda.T,W1.T),(faces_train.T-m).T)
+proj_lda_test = np.dot(np.dot(W_lda.T,W1.T),(faces_test.T-m).T)
 print(">>4:PCA- Test-Projection: test.shape=",proj_pca_test.shape)
 print(">>4:LDA- Test-Projection: test.shape=",proj_lda_test.shape)
 
@@ -49,7 +49,7 @@ for face in proj_pca_test.T:
 # identify for LDA : compute distence
 recog_lda = []
 for face in proj_lda_test.T:
-    dist = [np.linalg.norm( temp - face ) for temp in Z_lda.T]
+    dist = [np.linalg.norm( temp - face) for temp in Z_lda.T]
     recog_lda.append(dist.index(min(dist)))
 # make up confusion matrix
 confusionmatrix = [ 0 for x in range(10)]
@@ -97,11 +97,12 @@ plt.imshow(mean_face,'gray')
 print(">>8:LDA: Centers.shape=",Centers.shape,"\tLDAW.shape=",W_lda.shape)
 Cp = np.dot(W_lda,Centers)
 print(">>9:LDA: Cp.shape=",Cp.shape,"\tme.shape=",m.shape)
-M = np.tile(m,10).reshape(22400,10)
+#M = np.tile(m,10).reshape(22400,10)
+M = np.asarray([m,m,m,m,m,m,m,m,m,m]).T
 print(">>10:LDA: W1.shape=",W1.shape,"\tCp.shape=",Cp.shape,"\tM.shape=",M.shape)
 Cr = np.dot(W1,Cp) + M
-print(">>11:LDA: Cr.shape=",Cr.shape)
-reshaped_cr = [x.reshape(160,140) for x in Cr.T]
+reshaped_cr = np.asarray([x.reshape(160,140) for x in Cr.T])
+print(">>11:LDA: Cr.shape=",Cr.shape,"\treshaped_cr.shape=",reshaped_cr.shape)
 # plot them
 fig = plt.figure()
 plt.subplots_adjust(hspace=0.5)
@@ -112,7 +113,7 @@ for x,cf in enumerate(reshaped_cr):
 #plt.show()
 
 # Task 5>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-print(">>12:FusionScheme:  ye.shape=",proj_pca_train.shape,"\tyf.shape=",proj_lda_train.shape)
 alpha = 0.5
-y = np.asarray([[alpha*proj_pca_train],[(1-alpha)*proj_lda_train]])
+y = np.asarray([[alpha*np.dot(We.T,(faces_train.T-m).T).T],[(1-alpha)*np.dot(np.dot(W_lda.T,W1.T),(faces_train.T-m).T)]])
 print(">>13:FusionScheme:  y.shape=",y.shape)
+print(">>12:FusionScheme:  ye.shape=",y[0][0].shape,"\tyf.shape=",y[1][0].shape)
