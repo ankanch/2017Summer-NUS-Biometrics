@@ -17,7 +17,7 @@ proj_pca_train = np.dot(We.T,(faces_train.T-m).T).T
 print(">>1:PCA-Projection: train.shape=",proj_pca_train.shape)
 reduced_faces_lda =  np.dot(W1.T,(faces_train.T-m).T)
 print(">>1:LDA-ReduceDimension: train.shape=",reduced_faces_lda.shape)
-W_lda, Centers, classLabels = FF.myLDA(reduced_faces_lda,idLabel_train[:K1])
+W_lda, Centers, classLabels = FF.myLDA(reduced_faces_lda,idLabel_train)
 proj_lda_train = np.dot(np.dot(W_lda.T,W1.T),(faces_train.T-m).T)
 print(">>1:LDA-Projection: train.shape=",proj_lda_train.shape)
 # compute the mean z of all his feature vectors
