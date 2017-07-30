@@ -62,14 +62,14 @@ for recg,real in zip(recog,idLabel_test):
     if recg == real:
         correct+=1
     confusionmatrix[real][recg]+=1
-print(">>4->5: PCA: ConfusionMatrix",confusionmatrix)
+print(">>4->5: PCA: ConfusionMatrix=\n",confusionmatrix)
 
 correct_lda = 0
 for recg,real in zip(recog_lda,idLabel_test):
     if recg == real:
         correct_lda+=1
     confusionmatrix_lda[real][recg]+=1
-print(">>4->5: LDA: ConfusionMatrix",confusionmatrix_lda)
+print(">>4->5: LDA: ConfusionMatrix=\n",confusionmatrix_lda)
 
 print(">>5:PCA- OverallCorrectRate:",correct/len(recog),",recgnized",correct,"of",len(recog))
 print(">>5:LDA- OverallCorrectRate:",correct_lda/len(recog_lda),",recgnized",correct_lda,"of",len(recog_lda))
@@ -114,6 +114,34 @@ for x,cf in enumerate(reshaped_cr):
 
 # Task 5>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 alpha = 0.5
-y = np.asarray([[alpha*np.dot(We.T,(faces_train.T-m).T).T],[(1-alpha)*np.dot(np.dot(W_lda.T,W1.T),(faces_train.T-m).T)]])
+y = np.asarray([alpha*proj_pca_train.T,(1-alpha)*proj_lda_train])
 print(">>13:FusionScheme:  y.shape=",y.shape)
-print(">>12:FusionScheme:  ye.shape=",y[0][0].shape,"\tyf.shape=",y[1][0].shape)
+print(">>12:FusionScheme:  ye.shape=",y[0].shape,"\tyf.shape=",y[1].shape)
+y = np.concatenate((y[0],y[1]),axis=0)
+print(">>13:FusionScheme: Merged  y.shape=",y.shape)
+# compute mean of every face
+faces_mean_train_fusion = [[] for x in range(10)]
+for label,vector in zip(idLabel_train,y.T):
+    faces_mean_train_fusion[label].append(vector)
+faces_mean_train_fusion = [ np.mean(x,0) for x in faces_mean_train_fusion]
+faces_mean_train_fusion = np.asarray(faces_mean_train_fusion)
+print(">>14:FusionScheme: FacesMean: train.shape=",faces_mean_train_fusion.shape)
+# identify persoon
+proj_test_fusion = np.concatenate((alpha*(np.dot(We.T,(faces_test.T-m).T)),\
+                                (1-alpha)*np.dot(np.dot(W_lda.T,W1.T),(faces_test.T-m).T)),axis=0)
+recog_fusion = []
+for face in proj_test_fusion.T:
+    dist = [np.linalg.norm( temp - face) for temp in faces_mean_train_fusion]
+    recog_fusion.append(dist.index(min(dist)))
+# confusion matrix
+confusionmatrix_fusion = [ 0 for x in range(10)]
+confusionmatrix_fusion = np.asarray([ confusionmatrix_fusion for x in range(10)])
+correct_fusion = 0
+for recg,real in zip(recog_fusion,idLabel_test):
+    if recg == real:
+        correct_fusion+=1
+    confusionmatrix[real][recg]+=1
+print(">>15:FusionScheme: ConfusionMatrix=\n",confusionmatrix)
+print(">>16:FusionScheme: OverallCorrectRate:",correct_fusion/len(recog_fusion),",recgnized",correct_fusion,"of",len(recog_fusion))
+print(">>5:PCA- OverallCorrectRate:",correct/len(recog),",recgnized",correct,"of",len(recog))
+print(">>5:LDA- OverallCorrectRate:",correct_lda/len(recog_lda),",recgnized",correct_lda,"of",len(recog_lda))
