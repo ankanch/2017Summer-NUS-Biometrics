@@ -110,10 +110,10 @@ for x,cf in enumerate(reshaped_cr):
     a = fig.add_subplot(2,5,x+1)
     a.set_title("Center %d"%(x+1))
     plt.imshow(cf,'gray')    
-plt.show()
+#plt.show()
 
 # Task 5>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-alpha = 0.5
+alpha = 0.5  # default 0.5
 y = np.asarray([alpha*proj_pca_train.T,(1-alpha)*proj_lda_train])
 print(">>13:FusionScheme:  y.shape=",y.shape)
 print(">>12:FusionScheme:  ye.shape=",y[0].shape,"\tyf.shape=",y[1].shape)
