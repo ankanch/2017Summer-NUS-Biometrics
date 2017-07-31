@@ -110,7 +110,7 @@ for x,cf in enumerate(reshaped_cr):
     a = fig.add_subplot(2,5,x+1)
     a.set_title("Center %d"%(x+1))
     plt.imshow(cf,'gray')    
-#plt.show()
+plt.show()
 
 # Task 5>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 alpha = 0.5
